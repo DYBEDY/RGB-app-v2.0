@@ -21,9 +21,9 @@ class StartViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let navigatioVC = segue.destination as? UINavigationController else { return }
-        guard let settingsVC = navigatioVC.topViewController as? SettingsViewController else { return }
+        guard let settingsVC = segue.destination as? SettingsViewController else { return }
         settingsVC.delegate = self
+        
         
     }
     

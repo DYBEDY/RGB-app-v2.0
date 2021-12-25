@@ -174,10 +174,10 @@
             </objects>
             <point key="canvasLocation" x="628.98550724637687" y="79.6875"/>
         </scene>
-        <!--View Controller-->
+        <!--Start View Controller-->
         <scene sceneID="1dr-dc-Trj">
             <objects>
-                <viewController id="ivd-Xt-nqa" sceneMemberID="viewController">
+                <viewController id="ivd-Xt-nqa" customClass="StartViewController" customModule="HomeWork2_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KDg-Uj-bRd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

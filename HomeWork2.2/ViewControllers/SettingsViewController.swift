@@ -29,23 +29,23 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         resultOfSettingsView.layer.cornerRadius = 30
-        
+
         maxValuesOfSliders()
-        
-        
+
+
         redSlider.value = 255
         greenSlider.value = 19
         blueSlider.value = 10
-        
+
         redColorTextField.delegate = self
         greenColorTextField.delegate = self
         blueColorTextField.delegate = self
-        
+
         maxTintColor()
         minTintColor()
-        
+
         setColor()
         setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
     }
@@ -122,11 +122,25 @@ extension SettingsViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let newValue = textField.text else { return }
         guard let newNUmber = Float(newValue) else { return }
+        guard 0...255 ~= newNUmber else {
+            if textField == redColorTextField {
+                showAlert(title: "ERROR", message: "Inter correct number from 1 to 255")
+                redColorTextField.text = nil
+            } else if textField == greenColorTextField {
+                showAlert(title: "ERROR", message: "Inter correct number from 0 to 255")
+                greenColorTextField.text = nil
+            } else {
+                showAlert(title: "ERROR", message: "Inter correct number from 0 to 255")
+                blueColorTextField.text = nil
+            }
+            return
+        }
+        
+      
         
         if textField == redColorTextField {
             redSlider.value = newNUmber
             redValueLabel.text = newValue
-            
         } else if textField == greenColorTextField {
             greenSlider.value = newNUmber
             greenValueLabel.text = newValue
@@ -134,8 +148,10 @@ extension SettingsViewController: UITextFieldDelegate {
             blueSlider.value = newNUmber
             blueValueLabel.text = newValue
         }
+    
         setColor()
     }
+    
 }
 
             
@@ -145,6 +161,7 @@ private func showAlert(title: String,  message: String) {
     
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let alertAction = UIAlertAction(title: "OK", style: .default) { _ in
+        
     }
         
     
@@ -153,3 +170,5 @@ private func showAlert(title: String,  message: String) {
 }
 }
             
+
+
