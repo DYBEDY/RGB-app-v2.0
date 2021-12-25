@@ -23,6 +23,8 @@ class SettingsViewController: UIViewController {
     @IBOutlet var greenColorTextField: UITextField!
     @IBOutlet var blueColorTextField: UITextField!
     
+    var delegate: SettingsViewControllerDelegate!
+    
     
     
     override func viewDidLoad() {
@@ -49,10 +51,6 @@ class SettingsViewController: UIViewController {
     }
     
     
-    @IBAction func doneButtonPressed() {
-        dismiss(animated: true)
-    }
-    
     @IBAction func sliderAction(_ sender: UISlider) {
         setColor()
         
@@ -61,8 +59,15 @@ class SettingsViewController: UIViewController {
         case greenSlider: setValue(for: greenValueLabel)
         default: setValue(for: blueValueLabel)
         }
-       
         }
+    
+    @IBAction func doneButtonPressed() {
+        view.endEditing(true)
+        delegate.setValue(for: resultOfSettingsView.backgroundColor ?? .blue)
+        dismiss(animated: true)
+    }
+    
+    
     
     //MARK: - Private methods
     
@@ -134,5 +139,17 @@ extension SettingsViewController: UITextFieldDelegate {
 }
 
             
+// MARK: - Alert method
+extension SettingsViewController {
+private func showAlert(title: String,  message: String) {
     
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let alertAction = UIAlertAction(title: "OK", style: .default) { _ in
+    }
+        
+    
+    alert.addAction(alertAction)
+    present(alert, animated: true)
+}
+}
             
