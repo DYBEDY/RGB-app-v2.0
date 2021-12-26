@@ -29,6 +29,7 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        resultOfSettingsView.backgroundColor = color
         resultOfSettingsView.layer.cornerRadius = 30
         
         maxValuesOfSliders()
@@ -44,10 +45,10 @@ class SettingsViewController: UIViewController {
         maxTintColor()
         minTintColor()
 
-        setColor()
+        colorSeparator()
         setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
         
-        resultOfSettingsView.backgroundColor = color
+        
         
         addDoneButtonTo(redColorTextField, greenColorTextField, blueColorTextField)
         
@@ -67,15 +68,21 @@ class SettingsViewController: UIViewController {
         }
     
     @IBAction func doneButtonPressed() {
-        view.endEditing(true)
         delegate.setValue(for: resultOfSettingsView.backgroundColor ?? .blue)
-        
         dismiss(animated: true)
     }
     
 
     
     //MARK: - Private methods
+    
+    private func colorSeparator() {
+          let startColor = CIColor(color: color ?? .white)
+          redSlider.value = Float(startColor.red)
+          greenSlider.value = Float(startColor.green)
+          blueSlider.value = Float(startColor.blue)
+      }
+    
     private func setColor() {
         resultOfSettingsView.backgroundColor = UIColor(
             red: CGFloat(redSlider.value / 255),
