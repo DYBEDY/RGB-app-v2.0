@@ -24,21 +24,19 @@ class SettingsViewController: UIViewController {
     @IBOutlet var blueColorTextField: UITextField!
     
     var delegate: SettingsViewControllerDelegate!
-    
+    var color: UIColor!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         resultOfSettingsView.layer.cornerRadius = 30
-
+        
         maxValuesOfSliders()
 
-
-        redSlider.value = 255
-        greenSlider.value = 19
-        blueSlider.value = 10
-
+        redSlider.value = 100
+        greenSlider.value = 120
+        blueSlider.value = 200
+        
         redColorTextField.delegate = self
         greenColorTextField.delegate = self
         blueColorTextField.delegate = self
@@ -48,6 +46,11 @@ class SettingsViewController: UIViewController {
 
         setColor()
         setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
+        
+        resultOfSettingsView.backgroundColor = color
+        
+        addDoneButtonTo(redColorTextField, greenColorTextField, blueColorTextField)
+        
         
         
     }
@@ -66,13 +69,13 @@ class SettingsViewController: UIViewController {
     @IBAction func doneButtonPressed() {
         view.endEditing(true)
         delegate.setValue(for: resultOfSettingsView.backgroundColor ?? .blue)
+        
         dismiss(animated: true)
     }
     
-    
+
     
     //MARK: - Private methods
-    
     private func setColor() {
         resultOfSettingsView.backgroundColor = UIColor(
             red: CGFloat(redSlider.value / 255),
@@ -117,39 +120,84 @@ class SettingsViewController: UIViewController {
         greenSlider.minimumTrackTintColor = .green
         blueSlider.minimumTrackTintColor = .blue
     }
-}
 
+
+}
 // MARK: - Keyboard methods
 extension SettingsViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let newValue = textField.text else { return }
         
         if let newNumber = Float(newValue) {
+            guard 0...255 ~= newNumber else {
+                switch textField.tag {
+                case 0:
+                    showAlert(title: "ERROR", message: "Input correct number from 1 to 255")
+                case 1:
+                    showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
+                case 2:
+                    showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
+                default: break
+                }
+                return
+            }
             switch textField.tag {
-            case 0 where 1...255 ~= newNumber:
+            case 0:
                 redSlider.value = newNumber
-            case 1 where 0...255 ~= newNumber:
+            case 1:
                 greenSlider.value = newNumber
-            case 2 where 0...255 ~= newNumber:
+            case 2:
                 blueSlider.value = newNumber
             default: break
             }
-                setColor()
-                setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
-    } else {
-        switch textField.tag {
-        case 0:
-            showAlert(title: "ERROR", message: "Input correct number from 1 to 255")
-        case 1:
-            showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
-        case 2:
-            showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
-        default: break
+            setColor()
+            setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
+        } else {
+            switch textField.tag {
+            case 0:
+                showAlert(title: "ERROR", message: "Input correct number from 1 to 255")
+            case 1:
+                showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
+            case 2:
+                showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
+            default: break
+            }
+            
         }
         
     }
-            
+    
+    private func addDoneButtonTo(_ textFields: UITextField...) {
+        
+        let numberToolbar = UIToolbar()
+        numberToolbar.sizeToFit()
+        textFields.forEach { textField in
+            switch textField {
+            case redColorTextField: textField.inputAccessoryView = numberToolbar
+            case greenColorTextField: textField.inputAccessoryView = numberToolbar
+            default: textField.inputAccessoryView = numberToolbar
+            }
+        }
+        
+        let doneButton = UIBarButtonItem(title:"Done",
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(tapDone))
+        
+        let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
+                                            target: nil,
+                                            action: nil)
+        
+        numberToolbar.items = [flexBarButton, doneButton]
+        
     }
+    
+    @objc private func tapDone() {
+        view.endEditing(true)
+    }
+    
+    
+    
 }
 
 
