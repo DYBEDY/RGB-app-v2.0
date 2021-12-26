@@ -121,40 +121,33 @@ class SettingsViewController: UIViewController {
 extension SettingsViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let newValue = textField.text else { return }
-        guard let newNUmber = Float(newValue) else { return }
-        guard 0...255 ~= newNUmber else {
-            if textField == redColorTextField {
-                showAlert(title: "ERROR", message: "Inter correct number from 1 to 255")
-                redColorTextField.text = nil
-            } else if textField == greenColorTextField {
-                showAlert(title: "ERROR", message: "Inter correct number from 0 to 255")
-                greenColorTextField.text = nil
-            } else {
-                showAlert(title: "ERROR", message: "Inter correct number from 0 to 255")
-                blueColorTextField.text = nil
+        
+        if let newNumber = Float(newValue) {
+            switch textField.tag {
+            case 0 where 1...255 ~= newNumber:
+                redSlider.value = newNumber
+            case 1 where 0...255 ~= newNumber:
+                greenSlider.value = newNumber
+            case 2 where 0...255 ~= newNumber:
+                blueSlider.value = newNumber
+            default: break
             }
-            return
+                setColor()
+                setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
+    } else {
+        switch textField.tag {
+        case 0:
+            showAlert(title: "ERROR", message: "Input correct number from 1 to 255")
+        case 1:
+            showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
+        case 2:
+            showAlert(title: "ERROR", message: "Input correct number from 0 to 255")
+        default: break
         }
         
-      
-        
-        if textField == redColorTextField {
-            redSlider.value = newNUmber
-            redValueLabel.text = newValue
-        } else if textField == greenColorTextField {
-            greenSlider.value = newNUmber
-            greenValueLabel.text = newValue
-        } else {
-            blueSlider.value = newNUmber
-            blueValueLabel.text = newValue
-        }
-    
-        setColor()
     }
-    
-}
-
             
+    }
 // MARK: - Alert method
 extension SettingsViewController {
 private func showAlert(title: String,  message: String) {
