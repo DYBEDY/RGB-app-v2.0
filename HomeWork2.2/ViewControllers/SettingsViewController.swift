@@ -29,27 +29,24 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        resultOfSettingsView.backgroundColor = color
+        
         resultOfSettingsView.backgroundColor = color
         resultOfSettingsView.layer.cornerRadius = 30
         
         maxValuesOfSliders()
-
-        redSlider.value = 100
-        greenSlider.value = 120
-        blueSlider.value = 200
         
         redColorTextField.delegate = self
         greenColorTextField.delegate = self
         blueColorTextField.delegate = self
-
+        
         maxTintColor()
         minTintColor()
-
+        
         colorSeparator()
+        
         setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
-        
-        
-        
         addDoneButtonTo(redColorTextField, greenColorTextField, blueColorTextField)
         
         
@@ -65,29 +62,29 @@ class SettingsViewController: UIViewController {
         case greenSlider: setValue(for: greenValueLabel)
         default: setValue(for: blueValueLabel)
         }
-        }
+    }
     
     @IBAction func doneButtonPressed() {
+        view.endEditing(true)
         delegate.setValue(for: resultOfSettingsView.backgroundColor ?? .blue)
         dismiss(animated: true)
     }
     
-
     
     //MARK: - Private methods
     
-    private func colorSeparator() {
-          let startColor = CIColor(color: color ?? .white)
-          redSlider.value = Float(startColor.red)
-          greenSlider.value = Float(startColor.green)
-          blueSlider.value = Float(startColor.blue)
-      }
-    
     private func setColor() {
         resultOfSettingsView.backgroundColor = UIColor(
-            red: CGFloat(redSlider.value / 255),
-            green: CGFloat(greenSlider.value / 255),
-            blue: CGFloat(blueSlider.value / 255), alpha: 1)
+            red: CGFloat(redSlider.value),
+            green: CGFloat(greenSlider.value),
+            blue: CGFloat(blueSlider.value), alpha: 1)
+    }
+    
+    private func colorSeparator() {
+        let startColor = CIColor(color: color ?? .white)
+        redSlider.value = Float(startColor.red)
+        greenSlider.value = Float(startColor.green)
+        blueSlider.value = Float(startColor.blue)
     }
     
     private func setValue(for labels: UILabel...) {
@@ -107,13 +104,13 @@ class SettingsViewController: UIViewController {
     }
     
     private func string(from slider: UISlider) -> String {
-        String(format: "%.0f", slider.value )
+        String(format: "%.2f", slider.value )
     }
     
     private func maxValuesOfSliders() {
-        redSlider.maximumValue = 255
-        greenSlider.maximumValue = 255
-        blueSlider.maximumValue = 255
+        redSlider.maximumValue = 1
+        greenSlider.maximumValue = 1
+        blueSlider.maximumValue = 1
     }
     
     private func maxTintColor() {
@@ -127,8 +124,8 @@ class SettingsViewController: UIViewController {
         greenSlider.minimumTrackTintColor = .green
         blueSlider.minimumTrackTintColor = .blue
     }
-
-
+    
+    
 }
 // MARK: - Keyboard methods
 extension SettingsViewController: UITextFieldDelegate {
@@ -136,7 +133,7 @@ extension SettingsViewController: UITextFieldDelegate {
         guard let newValue = textField.text else { return }
         
         if let newNumber = Float(newValue) {
-            guard 0...255 ~= newNumber else {
+            guard 0...1 ~= newNumber else {
                 switch textField.tag {
                 case 0:
                     showAlert(title: "ERROR", message: "Input correct number from 1 to 255")
@@ -209,21 +206,20 @@ extension SettingsViewController: UITextFieldDelegate {
 
 
 
-            
+
 // MARK: - Alert method
 extension SettingsViewController {
-private func showAlert(title: String,  message: String) {
-    
-    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let alertAction = UIAlertAction(title: "OK", style: .default) { _ in
+    private func showAlert(title: String,  message: String) {
         
-    }
-        
-    
-    alert.addAction(alertAction)
-    present(alert, animated: true)
-}
-}
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "OK", style: .default) { _ in
             
+        }
+        
+        
+        alert.addAction(alertAction)
+        present(alert, animated: true)
+    }
+}
 
 
