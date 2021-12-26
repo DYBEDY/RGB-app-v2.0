@@ -48,6 +48,8 @@ class SettingsViewController: UIViewController {
 
         setColor()
         setValue(for: redValueLabel, greenValueLabel, blueValueLabel)
+        
+        
     }
     
     
@@ -148,6 +150,11 @@ extension SettingsViewController: UITextFieldDelegate {
     }
             
     }
+}
+
+
+
+            
 // MARK: - Alert method
 extension SettingsViewController {
 private func showAlert(title: String,  message: String) {
